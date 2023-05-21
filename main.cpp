@@ -4,20 +4,6 @@
 #include <algorithm>
 using namespace std;
 
-typedef struct RGB_Color
-{
-	int R;
-	int G;
-	int B;
-}RGB_Color;
-
-typedef struct HSL_Color
-{
-	int H;
-	int S;
-	int L;
-}HSL_Color;
-
 void RGBToHSL(int R, int G, int B);
 
 void HSLToRGB(int H, int S, int L);
