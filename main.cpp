@@ -2,11 +2,58 @@
 #include <math.h>
 #include <stdint.h>
 #include <algorithm>
+
 using namespace std;
+void RGBToHSV(int R, int G, int B);
 
-void RGBToHSL(int R, int G, int B);
+void HSVToRGB(float H, float S, float V);
 
-void HSLToRGB(int H, int S, int L);
+void RGB2HSL(int R, int G, int B)
+{
+    float min_val, max_val, delta;
+    float r, g, b, L, H, S, del_R, del_G, del_B;
+    r = ((float)R / 255.0f);
+    g = ((float)G / 255.0f);
+    b = ((float)B / 255.0f);
+    min_val = min({r, g, b});
+    max_val = max({r, g, b});
+    delta = max_val - min_val;
+    L = (min_val + max_val)/2;
+
+    if(0 == max_val)
+    {
+        /* Gray color. No chroma */
+        H = 0;
+        S = 0;
+    }
+    else
+    {
+        if(0.5 < L) S = max_val / (max_val + min_val);
+        else S = max_val / (2 - max_val - min_val);
+        del_R = ( ( ( max_val - r ) / 6 ) + ( delta / 2 ) ) / delta;
+        del_G = ( ( ( max_val - g ) / 6 ) + ( delta / 2 ) ) / delta;
+        del_B = ( ( ( max_val - b ) / 6 ) + ( delta / 2 ) ) / delta;
+
+        if (r == max_val)
+        {
+            H = b - g;
+        }
+        else if(g == max_val)
+        {
+            H = (1 / 3) + r - b;
+        }
+        else if(b == max_val)
+        {
+            H = (2 / 3) + g - r;
+        }
+
+        if(0 > H) H += 1;
+        if(1 < H) H -= 1;
+    }
+    cout<<H<<endl;
+    cout<<S<<endl;
+    cout<<L<<endl;
+}
 
 float Hue2RGB(float v1, float v2, float vH )
 {
@@ -46,15 +93,15 @@ void HSL2RGB(float H, float S, float L)
 }
 int main()
 {
-    int R = 255, G = 255, B = 255;
+    int R = 213, G = 100, B = 32;
     //RGBToHSL(R, G, B);
     float H = 360.0, S = 0.8, L = 0.12;
     HSL2RGB(H, S, L);
-    //HSLToRGB(H, S, L);
+    // HSVToRGB(H, S, V);
 	return 0;
 }
 
-void RGBToHSL(int R, int G, int B)
+void RGBToHSV(int R, int G, int B)
 {
 	//Using algorithm from:
     //rapidtables.com/convert/color/rgb-to-hsv.html
@@ -95,7 +142,56 @@ void RGBToHSL(int R, int G, int B)
     cout << "V: " << V << endl;
 }
 
-void HSLToRGB(int H, int S, int L)
+void HSVToRGB(float H, float S, float V)
 {
-	cout<<"Convert HSL to RGB"<<endl;
+    int R, G, B, R1, G1, B1;
+    float C = (float)S * (float)V;
+    int modulo = (int)(H/60) % 2;
+    float X = C * (1 - abs(modulo - 1));
+    float m = V - C;
+
+    if(H >=0 && H < 60)
+    {
+        R1 = C;
+        G1 = X;
+        B1 = 0;
+    }
+    else if(H >= 60 && H < 120)
+    {
+        R1 = X;
+        G1 = C;
+        B1 = 0;
+    }
+    else if(H >= 120 && H < 280)
+    {
+        R1 = 0;
+        G1 = C;
+        B1 = X;
+    }
+    else if(H >= 180 && H < 240)
+    {
+        R1 = 0;
+        G1 = X;
+        B1 = C;
+    }
+    else if(H >=240 && H < 300)
+    {
+        R1 = X;
+        G1 = 0;
+        B1 = C;
+    }
+    else if(H >300 && H < 360)
+    {
+        R1 = C;
+        G1 = 0;
+        B1 = X;
+    }
+
+    R = (R1 + m)*255;
+    G = (G1 + m)*255;
+    B = (B1 + m)*255;
+
+    cout << "R: " << R << endl;
+    cout << "G: " << G << endl;
+    cout << "B: " << B << endl;
 }
