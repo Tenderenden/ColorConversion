@@ -57,19 +57,22 @@ void RGB2HSL(int R, int G, int B)
 
 float Hue2RGB(float v1, float v2, float vH )
 {
-    if ( vH < 0 ) vH += 1;
-    if( vH > 1 ) vH -= 1;
-    if ( ( 6 * vH ) < 1 ) return ( v1 + ( v2 - v1 ) * 6 * vH );
-    if ( ( 2 * vH ) < 1 ) return ( v2 );
-    if ( ( 3 * vH ) < 2 ) return ( v1 + ( v2 - v1 ) * ( ( 2 / 3 ) - vH ) * 6 );
+    if ( vH < 0 ) vH += 1.0f;
+    if( vH > 1 ) vH -= 1.0f;
+    if ( ( 6.0f * vH ) < 1.0f ) return ( v1 + ( v2 - v1 ) * 6.0f * vH );
+    if ( ( 2.0f * vH ) < 1.0f ) return ( v2 );
+    if ( ( 3.0f * vH ) < 2.0f ) return ( v1 + ( v2 - v1 ) * ( ( 2.0f / 3.0f ) - vH ) * 6.0f );
     return ( v1 );
 }
 
 
 void HSL2RGB(float H, float S, float L)
 {
+    //H, S and L input range = 0 ÷ 1.0
+    //R, G and B output range = 0 ÷ 255
     //Using algorithm from http://www.easyrgb.com/en/math.php#text19
     float R, G, B, var_1, var_2;
+    H = H / 360;
     if ( S == 0 )
     {
         R = L * 255.0;
