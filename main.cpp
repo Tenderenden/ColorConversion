@@ -7,49 +7,47 @@ using namespace std;
 
 void RGB2HSL(int R, int G, int B)
 {
-    float min_val, max_val, delta;
-    float r, g, b, L, H, S, del_R, del_G, del_B;
-    r = ((float)R / 255.0f);
-    g = ((float)G / 255.0f);
-    b = ((float)B / 255.0f);
-    min_val = min({r, g, b});
-    max_val = max({r, g, b});
-    delta = max_val - min_val;
-    L = (min_val + max_val)/2;
+    //R, G and B input range = 0 ÷ 255
+    //H, S and L output range = 0 ÷ 1.0
+    float var_R, var_G, var_B;
+    float var_Min, var_Max, del_Max;
+    float del_R, del_G, del_B;
+    float H, S, L;
+    var_R = ( (float)R / 255 );
+    var_G = ( (float)G / 255 );
+    var_B = ( (float)B / 255 );
 
-    if(0 == max_val)
+    var_Min = min({ var_R, var_G, var_B });    //Min. value of RGB
+    var_Max = max({ var_R, var_G, var_B });    //Max. value of RGB
+    del_Max = var_Max - var_Min;             //Delta RGB value
+
+    L = ( var_Max + var_Min )/ 2;
+
+    if ( del_Max == 0 )                     //This is a gray, no chroma...
     {
-        /* Gray color. No chroma */
         H = 0;
         S = 0;
     }
-    else
+    else                                    //Chromatic data...
     {
-        if(0.5 < L) S = max_val / (max_val + min_val);
-        else S = max_val / (2 - max_val - min_val);
-        del_R = ( ( ( max_val - r ) / 6 ) + ( delta / 2 ) ) / delta;
-        del_G = ( ( ( max_val - g ) / 6 ) + ( delta / 2 ) ) / delta;
-        del_B = ( ( ( max_val - b ) / 6 ) + ( delta / 2 ) ) / delta;
+        if ( L < 0.5 ) S = del_Max / ( var_Max + var_Min );
+        else           S = del_Max / ( 2 - var_Max - var_Min );
 
-        if (r == max_val)
-        {
-            H = b - g;
-        }
-        else if(g == max_val)
-        {
-            H = (1 / 3) + r - b;
-        }
-        else if(b == max_val)
-        {
-            H = (2 / 3) + g - r;
-        }
+        del_R = ( ( ( var_Max - var_R ) / 6 ) + ( del_Max / 2 ) ) / del_Max;
+        del_G = ( ( ( var_Max - var_G ) / 6 ) + ( del_Max / 2 ) ) / del_Max;
+        del_B = ( ( ( var_Max - var_B ) / 6 ) + ( del_Max / 2 ) ) / del_Max;
 
-        if(0 > H) H += 1;
-        if(1 < H) H -= 1;
+        if      ( var_R == var_Max ) H = del_B - del_G;
+        else if ( var_G == var_Max ) H = ( 1 / 3 ) + del_R - del_B;
+        else if ( var_B == var_Max ) H = ( 2 / 3 ) + del_G - del_R;
+
+            if ( H < 0 ) H += 1;
+            if ( H > 1 ) H -= 1;
     }
-    cout<<H<<endl;
-    cout<<S<<endl;
-    cout<<L<<endl;
+    H *= 360;
+    cout << H << endl;
+    cout << S << endl;
+    cout << L << endl;
 }
 
 float Hue2RGB(float v1, float v2, float vH )
@@ -81,62 +79,25 @@ void HSL2RGB(float H, float S, float L)
         if ( L < 0.5 ) var_2 = L * ( 1.0 + S );
         else           var_2 = ( L + S ) - ( S * L );
 
-       var_1 = 2.0 * L - var_2;
+        var_1 = 2.0 * L - var_2;
 
         R = 255.0 * Hue2RGB( var_1, var_2, H + ( 1.0 / 3.0 ) );
         G = 255.0 * Hue2RGB( var_1, var_2, H );
         B = 255.0 * Hue2RGB( var_1, var_2, H - ( 1.0 / 3.0 ) );
     }
-    cout<<R<<endl;
-    cout<<G<<endl;
-    cout<<B<<endl;
+    cout << R << endl;
+    cout << G << endl;
+    cout << B << endl;
 }
 
 int main()
 {
     int R = 213, G = 100, B = 32;
+    cout << "RGB -> HSL" << endl;
+    RGB2HSL(R, G, B);
+    cout << "HSL -> RGB" << endl;
     float H = 360.0, S = 0.8, L = 0.12;
     HSL2RGB(H, S, L);
-	return 0;
-}
-
-void RGBToHSV(int R, int G, int B)
-{
-	//Using algorithm from:
-    //rapidtables.com/convert/color/rgb-to-hsv.html
-    float R1 = (float)R / 255;
-    float G1 = (float)G / 255;
-    float B1 = (float)B / 255;
-
-    float Cmax = max(max(R1, G1), B1);
-    float Cmin = min(min(R1, G1), B1);
-
-    float H, S = 0, V, dC;
-
-    V = Cmax;
-
-    dC = Cmax - Cmin;
-    if(0 == dC)
-    {
-        H = 0;
-    }
-    else if(Cmax == R1)
-    {
-        H = 60 * ((( G1 - B1) / dC) % 6);
-    }
-    else if(Cmax == G1)
-    {
-        H = 60 * ((( B1 - R1) / dC) + 2);;
-    }
-    else if(Cmax == B1)
-    {
-        H = 60 * ((( G1 - B1) / dC) + 4);
-    }
-
-    if(0 != Cmax) S = dC / Cmax;
-
-
-    cout << "H: " << H << endl;
-    cout << "S: " << S << endl;
-    cout << "V: " << V << endl;
+	
+    return 0;
 }
