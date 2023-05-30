@@ -4,9 +4,6 @@
 #include <algorithm>
 
 using namespace std;
-void RGBToHSV(int R, int G, int B);
-
-void HSVToRGB(float H, float S, float V);
 
 void RGB2HSL(int R, int G, int B)
 {
@@ -94,13 +91,12 @@ void HSL2RGB(float H, float S, float L)
     cout<<G<<endl;
     cout<<B<<endl;
 }
+
 int main()
 {
     int R = 213, G = 100, B = 32;
-    //RGBToHSL(R, G, B);
     float H = 360.0, S = 0.8, L = 0.12;
     HSL2RGB(H, S, L);
-    // HSVToRGB(H, S, V);
 	return 0;
 }
 
@@ -126,7 +122,7 @@ void RGBToHSV(int R, int G, int B)
     }
     else if(Cmax == R1)
     {
-        H = 60 * ((int)(( G1 - B1) / dC) % 6);
+        H = 60 * ((( G1 - B1) / dC) % 6);
     }
     else if(Cmax == G1)
     {
@@ -143,58 +139,4 @@ void RGBToHSV(int R, int G, int B)
     cout << "H: " << H << endl;
     cout << "S: " << S << endl;
     cout << "V: " << V << endl;
-}
-
-void HSVToRGB(float H, float S, float V)
-{
-    int R, G, B, R1, G1, B1;
-    float C = (float)S * (float)V;
-    int modulo = (int)(H/60) % 2;
-    float X = C * (1 - abs(modulo - 1));
-    float m = V - C;
-
-    if(H >=0 && H < 60)
-    {
-        R1 = C;
-        G1 = X;
-        B1 = 0;
-    }
-    else if(H >= 60 && H < 120)
-    {
-        R1 = X;
-        G1 = C;
-        B1 = 0;
-    }
-    else if(H >= 120 && H < 280)
-    {
-        R1 = 0;
-        G1 = C;
-        B1 = X;
-    }
-    else if(H >= 180 && H < 240)
-    {
-        R1 = 0;
-        G1 = X;
-        B1 = C;
-    }
-    else if(H >=240 && H < 300)
-    {
-        R1 = X;
-        G1 = 0;
-        B1 = C;
-    }
-    else if(H >300 && H < 360)
-    {
-        R1 = C;
-        G1 = 0;
-        B1 = X;
-    }
-
-    R = (R1 + m)*255;
-    G = (G1 + m)*255;
-    B = (B1 + m)*255;
-
-    cout << "R: " << R << endl;
-    cout << "G: " << G << endl;
-    cout << "B: " << B << endl;
 }
