@@ -1,7 +1,6 @@
 #include "cconversion.h"
 
-
-static float Hue2RGB(float v1, float v2, float vH )
+static float Hue2RGB(float v1, float v2, float vH)
 {
     if ( vH < 0 ) vH += 1.0f;
     if( vH > 1 ) vH -= 1.0f;
@@ -23,8 +22,8 @@ void RGB2HSL(int R, int G, int B)
     var_G = ( (float)G / 255 );
     var_B = ( (float)B / 255 );
 
-    var_Min = min({ var_R, var_G, var_B });    //Min. value of RGB
-    var_Max = max({ var_R, var_G, var_B });    //Max. value of RGB
+    var_Min = std::min({ var_R, var_G, var_B });    //Min. value of RGB
+    var_Max = std::max({ var_R, var_G, var_B });    //Max. value of RGB
     del_Max = var_Max - var_Min;             //Delta RGB value
 
     L = ( var_Max + var_Min )/ 2;
