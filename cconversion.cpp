@@ -48,7 +48,7 @@ namespace ColorConv
             else if ( var_B == var_Max ) H = ( 2 / 3 ) + del_G - del_R;
 
                 if ( H < 0 ) H += 1;
-                if ( H > 1 ) H -= 1;
+                else if ( H > 1 ) H -= 1;
         }
         H *= 360;
         std::cout << H << std::endl;
