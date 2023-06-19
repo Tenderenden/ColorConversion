@@ -11,77 +11,80 @@ namespace ColorConv
         return ( v1 );
     }
 
-    void RGB2HSL(int R, int G, int B)
+    /*  R, G and B input range = 0 ÷ 255
+        H, S and L output range = 0 ÷ 1.0 */
+    HSL_Color_T RGB2HSL(RGB_Color_T *src)
     {
-        //R, G and B input range = 0 ÷ 255
-        //H, S and L output range = 0 ÷ 1.0
+        HSL_Color_T ans = {0};
         float var_R, var_G, var_B;
         float var_Min, var_Max, del_Max;
         float del_R, del_G, del_B;
-        float H, S, L;
-        var_R = ( (float)R / 255 );
-        var_G = ( (float)G / 255 );
-        var_B = ( (float)B / 255 );
+        var_R = ( (float)src->R / 255 );
+        var_G = ( (float)src->G / 255 );
+        var_B = ( (float)src->B / 255 );
 
         var_Min = std::min({ var_R, var_G, var_B });    //Min. value of RGB
         var_Max = std::max({ var_R, var_G, var_B });    //Max. value of RGB
         del_Max = var_Max - var_Min;             //Delta RGB value
 
-        L = ( var_Max + var_Min )/ 2;
+        ans.L = ( var_Max + var_Min )/ 2;
 
         if ( del_Max == 0 )                     //This is a gray, no chroma...
         {
-            H = 0;
-            S = 0;
+            ans.H = 0;
+            ans.S = 0;
         }
         else                                    //Chromatic data...
         {
-            if ( L < 0.5 ) S = del_Max / ( var_Max + var_Min );
-            else           S = del_Max / ( 2 - var_Max - var_Min );
+            if ( ans.L < 0.5 ) ans.S = del_Max / ( var_Max + var_Min );
+            else           ans.S = del_Max / ( 2 - var_Max - var_Min );
 
             del_R = ( ( ( var_Max - var_R ) / 6 ) + ( del_Max / 2 ) ) / del_Max;
             del_G = ( ( ( var_Max - var_G ) / 6 ) + ( del_Max / 2 ) ) / del_Max;
             del_B = ( ( ( var_Max - var_B ) / 6 ) + ( del_Max / 2 ) ) / del_Max;
 
-            if      ( var_R == var_Max ) H = del_B - del_G;
-            else if ( var_G == var_Max ) H = ( 1 / 3 ) + del_R - del_B;
-            else if ( var_B == var_Max ) H = ( 2 / 3 ) + del_G - del_R;
+            if      ( var_R == var_Max ) ans.H = del_B - del_G;
+            else if ( var_G == var_Max ) ans.H = ( 1 / 3 ) + del_R - del_B;
+            else if ( var_B == var_Max ) ans.H = ( 2 / 3 ) + del_G - del_R;
 
-                if ( H < 0 ) H += 1;
-                else if ( H > 1 ) H -= 1;
+                if ( ans.H < 0 ) ans.H += 1;
+                else if ( ans.H > 1 ) ans.H -= 1;
         }
-        H *= 360;
-        std::cout << H << std::endl;
-        std::cout << S << std::endl;
-        std::cout << L << std::endl;
-    }
+        std::cout << ans.H << std::endl;
+        std::cout << ans.S << std::endl;
+        std::cout << ans.L << std::endl;
 
-    void HSL2RGB(float H, float S, float L)
+        return ans;
+    }
+    
+    
+    /*  H, S and L input range = 0 ÷ 1.0
+        R, G and B output range = 0 ÷ 255
+        Using algorithm from http://www.easyrgb.com/en/math.php#text19 */
+    RGB_Color_T HSL2RGB(HSL_Color_T *src)
     {
-        //H, S and L input range = 0 ÷ 1.0
-        //R, G and B output range = 0 ÷ 255
-        //Using algorithm from http://www.easyrgb.com/en/math.php#text19
+        RGB_Color_T ans = {0};
         float R, G, B, var_1, var_2;
-        H = H / 360;
-        if ( S == 0 )
+        if ( src->S == 0 )
         {
-            R = L * 255.0;
-            G = L * 255.0;
-            B = L * 255.0;
+            ans.R = src->L * 255.0;
+            ans.G = src->L * 255.0;
+            ans.B = src->L * 255.0;
         }
         else
         {
-            if ( L < 0.5 ) var_2 = L * ( 1.0 + S );
-            else           var_2 = ( L + S ) - ( S * L );
+            if ( src->L < 0.5 ) var_2 = src->L * ( 1.0 + src->S );
+            else var_2 = ( src->L + src->S ) - ( src->S * src->L );
 
-            var_1 = 2.0 * L - var_2;
+            var_1 = 2.0 * src->L - var_2;
 
-            R = 255.0 * Hue2RGB( var_1, var_2, H + ( 1.0 / 3.0 ) );
-            G = 255.0 * Hue2RGB( var_1, var_2, H );
-            B = 255.0 * Hue2RGB( var_1, var_2, H - ( 1.0 / 3.0 ) );
+            ans.R = 255.0 * Hue2RGB( var_1, var_2, src->H + ( 1.0 / 3.0 ) );
+            ans.G = 255.0 * Hue2RGB( var_1, var_2, src->H );
+            ans.B = 255.0 * Hue2RGB( var_1, var_2, src->H - ( 1.0 / 3.0 ) );
         }
-        std::cout << R << std::endl;
-        std::cout << G << std::endl;
-        std::cout << B << std::endl;
+        std::cout << ans.R << std::endl;
+        std::cout << ans.G << std::endl;
+        std::cout << ans.B << std::endl;
+        return ans;
     }
 }
