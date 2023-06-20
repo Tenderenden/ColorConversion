@@ -16,6 +16,6 @@ namespace ColorConv
         float L;
     }HSL_Color_T;
     
-    HSL_Color_T RGB2HSL(RGB_Color_T *src);
-    RGB_Color_T HSL2RGB(HSL_Color_T *src);
+    void RGB2HSL(RGB_Color_T *src, HSL_Color_T *dst);
+    void HSL2RGB(HSL_Color_T *src, RGB_Color_T *dst);
 }
