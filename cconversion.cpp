@@ -1,8 +1,16 @@
 #include "cconversion.h"
 namespace ColorConv
 {
+    /**
+     * @brief Helper function to calculate RGB values from hue
+     * @param v1 
+     * @param v2 
+     * @param vH 
+     * @return 
+     */
     static float Hue2RGB(float v1, float v2, float vH)
     {
+        /* Source: https://easyrgb.com/en/math.php */
         if ( vH < 0 ) vH += 1.0f;
         else if( vH > 1 ) vH -= 1.0f;
         if ( ( 6.0f * vH ) < 1.0f ) return ( v1 + ( v2 - v1 ) * 6.0f * vH );
@@ -11,10 +19,17 @@ namespace ColorConv
         return ( v1 );
     }
 
-    /*  R, G and B input range = 0 ÷ 255
-        H, S and L output range = 0 ÷ 1.0 */
+    /**
+     * @brief Convert given color from RGB to HSL color space
+     * @param src pointer to source RGB_Color_T color struct
+     * @param dst pointer to destination HSL_Color_T color struct
+     */
     void RGB2HSL(RGB_Color_T *src, HSL_Color_T *dst)
     {
+        /*  R, G, B input range = 0 ÷ 255
+        H, S, L output range = 0 ÷ 1.0 
+        Source: https://easyrgb.com/en/math.php */
+
         float var_R, var_G, var_B;
         float var_Min, var_Max, del_Max;
         float del_R, del_G, del_B;
@@ -24,7 +39,7 @@ namespace ColorConv
 
         var_Min = std::min({ var_R, var_G, var_B });    //Min. value of RGB
         var_Max = std::max({ var_R, var_G, var_B });    //Max. value of RGB
-        del_Max = var_Max - var_Min;             //Delta RGB value
+        del_Max = var_Max - var_Min;                    //Delta RGB value
 
         dst->L = ( var_Max + var_Min )/ 2;
 
@@ -51,13 +66,17 @@ namespace ColorConv
         }
     }
     
-    
-    /*  H, S and L input range = 0 ÷ 1.0
-        R, G and B output range = 0 ÷ 255
-        Using algorithm from http://www.easyrgb.com/en/math.php#text19 */
+    /**
+     * @brief Convert given color from HSL to RGB color space
+     * @param src pointer to source HSL_Color_T color struct
+     * @param dst pointer to destination RGB_Color_T color struct
+     */
     void HSL2RGB(HSL_Color_T *src, RGB_Color_T *dst)
     {
-        float R, G, B, var_1, var_2;
+        /*  H, S, L input range = 0 ÷ 1.0
+        R, G, B output range = 0 ÷ 255
+        Source: https://easyrgb.com/en/math.php */
+        float var_1, var_2;
         if ( src->S == 0 )
         {
             dst->R = src->L * 255.0;
