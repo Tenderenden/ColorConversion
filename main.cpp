@@ -16,17 +16,20 @@ int main()
         .B = 32
     };
 
+    printf("--------------\n");
     printf("RGB -> HSL\n");
     ColorConv::RGB2HSL(&ColorRGB, &ColorHSL);
-    printf("H: %f, S: %f, L: %d\n", ColorHSL.H, ColorHSL.S, ColorHSL.L);
+    printf("RGB: %d, %d, %d\n", ColorRGB.R, ColorRGB.G, ColorRGB.B);
+    printf("HSL: %.2f, %.2f, %.2f\n", ColorHSL.H, ColorHSL.S, ColorHSL.L);
 
-
+    printf("--------------\n");
     printf("HSL -> RGB\n");
     ColorHSL.H = 1.0;
     ColorHSL.S = 0.8;
     ColorHSL.L = 0.12;
     ColorConv::HSL2RGB(&ColorHSL, &ColorRGB);
-    printf("R: %d, G: %d, B: %d\n", ColorRGB.R, ColorRGB.G, ColorRGB.B);
-    
+    printf("RGB: %d, %d, %d\n", ColorRGB.R, ColorRGB.G, ColorRGB.B);
+    printf("HSL: %.2f, %.2f, %.2f\n", ColorHSL.H, ColorHSL.S, ColorHSL.L);
+    printf("--------------\n");
     return 0;
 }
