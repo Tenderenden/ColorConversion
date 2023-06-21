@@ -1,4 +1,5 @@
-#include <iostream>
+#ifndef CCONVERSION_H
+#define CCONVERSION_H
 #include <algorithm>
 namespace ColorConv
 {
@@ -19,3 +20,5 @@ namespace ColorConv
     void RGB2HSL(RGB_Color_T *src, HSL_Color_T *dst);
     void HSL2RGB(HSL_Color_T *src, RGB_Color_T *dst);
 }
+
+#endif
