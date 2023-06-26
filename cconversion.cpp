@@ -1,6 +1,34 @@
 #include "cconversion.h"
 namespace ColorConv
 {
+    static float min_of_3(float v1, float v2, float v3)
+    {
+        if(v1 <= v2)
+        {
+            if(v1 <= v3) return v1;
+            else return v3;
+        }
+        else
+        {
+            if(v2 <= v3) return v2;
+            else return v3;
+        }
+    }
+
+    static float max_of_3(float v1, float v2, float v3)
+    {
+        if(v1 >= v2)
+        {
+            if(v1 >= v3) return v1;
+            else return v3;
+        }
+        else
+        {
+            if(v2 >= v3) return v2;
+            else return v3;
+        }
+    }
+
     static float Hue2RGB(float v1, float v2, float vH)
     {
         if ( vH < 0 ) vH += 1.0f;
@@ -22,8 +50,8 @@ namespace ColorConv
         var_G = ( (float)src->G / 255 );
         var_B = ( (float)src->B / 255 );
 
-        var_Min = std::min({ var_R, var_G, var_B });    //Min. value of RGB
-        var_Max = std::max({ var_R, var_G, var_B });    //Max. value of RGB
+        var_Min = min_of_3(var_R, var_G, var_B);    //Min. value of RGB
+        var_Max = max_of_3(var_R, var_G, var_B);    //Max. value of RGB
         del_Max = var_Max - var_Min;             //Delta RGB value
 
         dst->L = ( var_Max + var_Min )/ 2;

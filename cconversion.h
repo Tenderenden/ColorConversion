@@ -1,6 +1,5 @@
 #ifndef CCONVERSION_H
 #define CCONVERSION_H
-#include <algorithm>
 namespace ColorConv
 {
     typedef struct 
