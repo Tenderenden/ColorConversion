@@ -16,9 +16,21 @@ namespace ColorConv
         float S;
         float L;
     }HSL_Color_T;
+
+    typedef struct
+    {
+        float H;
+        float S;
+        float V;
+    }HSV_Color_T;
     
+    /* HSL <-> RGB */
     void RGB2HSL(RGB_Color_T *src, HSL_Color_T *dst);
     void HSL2RGB(HSL_Color_T *src, RGB_Color_T *dst);
+
+    /* HSV <-> RGB */
+    void RGB2HSV(RGB_Color_T *src, HSV_Color_T *dst);
+    void HSV2RGB(HSV_Color_T *src, RGB_Color_T *dst);
 }
 
 #endif
