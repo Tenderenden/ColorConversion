@@ -31,6 +31,9 @@ namespace ColorConv
     /* HSV <-> RGB */
     void RGB2HSV(RGB_Color_T *src, HSV_Color_T *dst);
     void HSV2RGB(HSV_Color_T *src, RGB_Color_T *dst);
+
+    void ForwardConversion(RGB_Color_T *src, HSV_Color_T *dst);
+    void BackwardConversion(HSV_Color_T *src, RGB_Color_T *dst);
 }
 
 #endif

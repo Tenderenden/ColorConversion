@@ -45,11 +45,23 @@ void TestHSV2RGB(void)
     printf("--------------\n");
 }
 
+void TestForward(void)
+{
+    ColorConv::RGB_Color_T ColorRGB = {213, 100, 32};
+    ColorConv::HSV_Color_T ColorHSV;
+    printf("RGB -> HSV (INT ONLY)\n");
+    ColorConv::ForwardConversion(&ColorRGB, &ColorHSV);
+    printf("RGB: %d, %d, %d\n", ColorRGB.R, ColorRGB.G, ColorRGB.B);
+    printf("HSV: %.2f, %.2f, %.2f\n", ColorHSV.H, ColorHSV.S, ColorHSV.V);
+    printf("--------------\n");
+}
+
 int main()
 {
     TestRGB2HSL();
     TestHSL2RGB();
     TestRGB2HSV();
     TestHSV2RGB();
+    TestForward();
     return 0;
 }

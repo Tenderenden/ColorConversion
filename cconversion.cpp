@@ -1,6 +1,29 @@
 #include "cconversion.h"
 namespace ColorConv
 {
+    #define EDGE_CONST 65537
+    static int mid_of_3(int a, int b, int c)
+    {
+        if(a <= b)
+        {
+            if(b <= c) return b;
+            else
+            {
+                if(a <= c) return c;
+                else return a;
+            }
+        }
+        else
+        {
+            if(a <= c) return a;
+            else
+            {
+                if(b <= c) return c;
+                else return b;
+            }
+        }
+    }
+
     static float Hue2RGB(float v1, float v2, float vH)
     {
         if ( vH < 0 ) vH += 1.0f;
@@ -175,5 +198,42 @@ namespace ColorConv
             dst->G = var_g * 255;
             dst->B = var_b * 255;
         }
+    }
+
+    void ForwardConversion(RGB_Color_T *src, HSV_Color_T *dst)
+    {
+        int c, m, M, d, I, F, E = EDGE_CONST;
+        M = int(std::max({src->R, src->G, src->B}));
+        m = int(std::min({src->R, src->G, src->B}));
+        d = M - m;
+        c = mid_of_3(src->R, src->G, src->B);
+        
+        dst->V = M;
+        if( d == 0)
+        {
+            dst->S = 0;
+            dst->H = 0;
+            return;
+        }
+        if(m == src->B)
+        {
+            if(M == src->R) I = 0;
+            else I = 1;
+        }
+        else if(m == src->R)
+        {
+            if(M == src->G) I = 2;
+            else I = 3;
+        }
+        else if(m == src->G)
+        {
+            if(M == src->B) I = 4;
+            else I = 5;
+        }
+
+        dst->S = ((d << 16) - 1) / M;
+        F = (((c - m) << 16) / d) + 1;
+        if(I == 1 || I == 3 || I == 5) F = E - F;
+        dst->H = E * I + F;
     }
 }
