@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.25.2)
 # set(CMAKE_C_COMPILER "C:/MinGW/bin/gcc.exe")
 # set(CMAKE_CXX_COMPILER "C:/MinGW/bin/g++.exe")
+set(CMAKE_BUILD_TYPE Debug)
 project(ColorConversion)
 add_library(cconversion cconversion.cpp)
 add_executable(${PROJECT_NAME} main.cpp)
